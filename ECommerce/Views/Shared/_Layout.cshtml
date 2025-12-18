@@ -14,6 +14,26 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+        @if (TempData["CartMessage"] != null)
+{
+    <div class="container">
+        <div class="alert alert-success alert-dismissible fade show mt-2" role="alert">
+            <strong>@TempData["CartMessage"]</strong>
+            <div class="mt-2">
+                <a asp-controller="Cart" asp-action="Index"
+                   class="btn btn-sm btn-success me-2">
+                    Voir le panier
+                </a>
+                <button type="button" class="btn btn-sm btn-outline-secondary"
+                        data-bs-dismiss="alert">
+                    Continuer vos achats
+                </button>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"
+                    aria-label="Close"></button>
+        </div>
+    </div>
+}
         <div class="container">
             <a class="navbar-brand" asp-controller="Home" asp-action="Index">ForYou</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

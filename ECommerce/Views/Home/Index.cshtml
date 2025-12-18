@@ -147,6 +147,7 @@
                                class="btn btn-sm btn-outline-secondary">Details</a>
                             <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline ms-1">
                                 <input type="hidden" name="productId" value="@p.Id" />
+                                <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
                                 <button type="submit" class="btn btn-sm btn-primary">Add to cart</button>
                             </form>
                         </div>
