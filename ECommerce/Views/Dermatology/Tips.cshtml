@@ -1,0 +1,177 @@
+﻿@model ECommerce.ViewModels.DermatologyTipsViewModel
+@using ECommerce.Models
+
+@{
+    ViewData["Title"] = "Dermatology Tips";
+}
+
+<h2>Dermatology Tips</h2>
+
+@if (Model.UserSkinType.HasValue)
+{
+    <div class="alert alert-success">
+        <span>
+            Personalized for <strong>@Model.UserSkinType.Value</strong>
+            @if (Model.UserConcern.HasValue && Model.UserConcern != SkinConcern.None)
+            {
+                <text> skin with main concern: <strong>@Model.UserConcern.Value</strong>.</text>
+            }
+            else
+            {
+                <text> skin.</text>
+            }
+        </span>
+        <a asp-controller="Skin" asp-action="Quiz" class="ms-2">Retake Skin Quiz</a>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        <span>These are general tips. For personalized advice, please </span>
+        @if (User.Identity?.IsAuthenticated ?? false)
+        {
+            <a asp-controller="Skin" asp-action="Quiz">take the Skin Type Quiz</a>
+    
+            <span>.</span>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login">log in</a>
+            <span> and then take the </span>
+            <a asp-controller="Skin" asp-action="Quiz">Skin Type Quiz</a>
+
+            <span>.</span>
+        }
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <h4>General Dermatology Tips</h4>
+        <ul>
+            @foreach (var tip in Model.GeneralTips)
+            {
+                <li>@tip</li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-6 mb-4">
+        <h4>Based on Your Skin Type</h4>
+        <ul>
+            @foreach (var tip in Model.SkinTypeTips)
+            {
+                <li>@tip</li>
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <h4>Based on Your Main Concern</h4>
+        <ul>
+            @foreach (var tip in Model.ConcernTips)
+            {
+                <li>@tip</li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-6 mb-4">
+        <h4>What to Avoid</h4>
+        <ul>
+            @foreach (var w in Model.Warnings)
+            {
+                <li>@w</li>
+            }
+        </ul>
+    </div>
+</div>
+
+<hr />
+
+<h3>Suggested Products</h3>
+<p class="text-muted">
+    These are suggestions based on your profile (if available). Always patch-test new products.
+</p>
+
+<div class="row">
+    @if (Model.Cleansers.Any())
+    {
+        <div class="col-md-3 mb-4">
+            <h5>Cleansers</h5>
+            @foreach (var p in Model.Cleansers)
+            {
+                <div class="mb-3">
+                    <strong>@p.Name</strong><br />
+                    <small class="text-muted">@p.Price.ToString("C")</small><br />
+                    <a asp-controller="Products" asp-action="Details" asp-route-id="@p.Id"
+                       class="btn btn-sm btn-outline-secondary mt-1">Details</a>
+                    <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline">
+                        <input type="hidden" name="productId" value="@p.Id" />
+                        <button type="submit" class="btn btn-sm btn-primary mt-1">Add</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+
+    @if (Model.Moisturizers.Any())
+    {
+        <div class="col-md-3 mb-4">
+            <h5>Moisturizers</h5>
+            @foreach (var p in Model.Moisturizers)
+            {
+                <div class="mb-3">
+                    <strong>@p.Name</strong><br />
+                    <small class="text-muted">@p.Price.ToString("C")</small><br />
+                    <a asp-controller="Products" asp-action="Details" asp-route-id="@p.Id"
+                       class="btn btn-sm btn-outline-secondary mt-1">Details</a>
+                    <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline">
+                        <input type="hidden" name="productId" value="@p.Id" />
+                        <button type="submit" class="btn btn-sm btn-primary mt-1">Add</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+
+    @if (Model.Treatments.Any())
+    {
+        <div class="col-md-3 mb-4">
+            <h5>Treatments / Serums</h5>
+            @foreach (var p in Model.Treatments)
+            {
+                <div class="mb-3">
+                    <strong>@p.Name</strong><br />
+                    <small class="text-muted">@p.Price.ToString("C")</small><br />
+                    <a asp-controller="Products" asp-action="Details" asp-route-id="@p.Id"
+                       class="btn btn-sm btn-outline-secondary mt-1">Details</a>
+                    <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline">
+                        <input type="hidden" name="productId" value="@p.Id" />
+                        <button type="submit" class="btn btn-sm btn-primary mt-1">Add</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+
+    @if (Model.Sunscreens.Any())
+    {
+        <div class="col-md-3 mb-4">
+            <h5>Sunscreens</h5>
+            @foreach (var p in Model.Sunscreens)
+            {
+                <div class="mb-3">
+                    <strong>@p.Name</strong><br />
+                    <small class="text-muted">@p.Price.ToString("C")</small><br />
+                    <a asp-controller="Products" asp-action="Details" asp-route-id="@p.Id"
+                       class="btn btn-sm btn-outline-secondary mt-1">Details</a>
+                    <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline">
+                        <input type="hidden" name="productId" value="@p.Id" />
+                        <button type="submit" class="btn btn-sm btn-primary mt-1">Add</button>
+                    </form>
+                </div>
+            }
+        </div>
+    }
+</div>

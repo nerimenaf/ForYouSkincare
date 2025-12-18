@@ -1,0 +1,46 @@
+﻿@model SkinQuizViewModel
+@{
+    ViewData["Title"] = "Skin Type Quiz";
+}
+
+<h2>Skin Type Quiz</h2>
+<p>Answer a few quick questions to let ForYou personalize your skincare recommendations.</p>
+
+<form asp-action="Quiz" method="post" class="mt-3">
+    <div class="form-check mb-2">
+        <input asp-for="OilyShiny" class="form-check-input" />
+        <label asp-for="OilyShiny" class="form-check-label"></label>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="FeelsDry" class="form-check-input" />
+        <label asp-for="FeelsDry" class="form-check-label"></label>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="CombinationAreas" class="form-check-input" />
+        <label asp-for="CombinationAreas" class="form-check-label"></label>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="EasilyIrritated" class="form-check-input" />
+        <label asp-for="EasilyIrritated" class="form-check-label"></label>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="HasAcne" class="form-check-input" />
+        <label asp-for="HasAcne" class="form-check-label"></label>
+    </div>
+
+    <div class="form-check mb-2">
+        <input asp-for="HasDarkSpots" class="form-check-input" />
+        <label asp-for="HasDarkSpots" class="form-check-label"></label>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="HasWrinkles" class="form-check-input" />
+        <label asp-for="HasWrinkles" class="form-check-label"></label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">See My Skin Profile</button>
+</form>

@@ -1,0 +1,70 @@
+﻿@model ECommerce.ViewModels.RoutinePageViewModel
+@using ECommerce.Models
+@using System.Linq
+
+@{
+    ViewData["Title"] = "My Routine";
+}
+
+<h2>My @Model.SelectedType Routine</h2>
+
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link @(Model.SelectedType == RoutineType.Morning ? "active" : "")"
+           asp-action="Index" asp-route-type="Morning">Morning</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(Model.SelectedType == RoutineType.Night ? "active" : "")"
+           asp-action="Index" asp-route-type="Night">Night</a>
+    </li>
+</ul>
+
+@if (!Model.Items.Any())
+{
+    <p>You have no products in your @Model.SelectedType routine yet.</p>
+    <p>
+        Go to the <a asp-controller="Products" asp-action="Index">shop</a>
+        and use "Add to Morning/Night Routine" on product pages.
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th style="width:60px;">Step</th>
+                <th>Product</th>
+                <th>Category</th>
+                <th style="width:120px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Items.OrderBy(i => i.StepOrder))
+            {
+                <tr>
+                    <td>@item.StepOrder</td>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.ProductName"
+                                     style="width:40px;height:40px;object-fit:cover;margin-right:8px;" />
+                            }
+                            <span>@item.ProductName</span>
+                        </div>
+                    </td>
+                    <td>@item.CategoryName</td>
+                    <td>
+                        <form asp-action="Remove" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@item.RoutineItemId" />
+                            <input type="hidden" name="routineType" value="@Model.SelectedType" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

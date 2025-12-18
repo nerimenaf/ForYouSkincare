@@ -1,0 +1,137 @@
+﻿@model ECommerce.ViewModels.IngredientCheckViewModel
+@using ECommerce.Models
+
+@{
+    ViewData["Title"] = "Ingredient Checker";
+
+    string profileSummary;
+    if (Model.UserSkinType.HasValue)
+    {
+        var skin = Model.UserSkinType.Value.ToString();
+        var concern = (Model.UserConcern.HasValue && Model.UserConcern != SkinConcern.None)
+            ? Model.UserConcern.Value.ToString()
+            : "None";
+        profileSummary = $"Profile: {skin} skin, main concern: {concern}.";
+    }
+    else
+    {
+        profileSummary = "No personalized profile detected. Log in and take the Skin Type Quiz for better recommendations.";
+    }
+}
+
+<h2>Ingredient Checker</h2>
+
+<p class="text-muted">
+    Paste a product's ingredient list (for example from a website or packaging).
+    ForYou will highlight helpful and potentially problematic ingredients based on simple rules.
+</p>
+
+@if (Model.UserSkinType.HasValue || Model.UserConcern.HasValue)
+{
+    <div class="alert alert-success">
+        @profileSummary
+        <a asp-controller="Skin" asp-action="Quiz" class="ms-2">Update Skin Quiz</a>
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        @profileSummary
+    </div>
+}
+
+<form asp-action="Checker" method="post" class="mb-4">
+    <div class="mb-3">
+        <label asp-for="IngredientsText" class="form-label">Ingredients (comma-separated or one per line)</label>
+        <textarea asp-for="IngredientsText" class="form-control" rows="5"
+                  placeholder="Example: Water, Glycerin, Niacinamide, Salicylic Acid, Fragrance"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Analyze Ingredients</button>
+</form>
+
+@if (Model.HasResult)
+{
+    <hr />
+    <h3>Analysis Results</h3>
+
+    @if (Model.ParsedIngredients.Any())
+    {
+        <p><strong>Parsed ingredients:</strong></p>
+        <ul>
+            @foreach (var ing in Model.ParsedIngredients)
+            {
+                <li>@ing</li>
+            }
+        </ul>
+    }
+
+    <div class="row mt-3">
+        <div class="col-md-4 mb-3">
+            <h5>Helpful / Supporting</h5>
+            @if (Model.HelpfulIngredients.Any())
+            {
+                <ul>
+                    @foreach (var h in Model.HelpfulIngredients.Distinct())
+                    {
+                        <li>@h</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted">No specific helpful matches found in our rule set.</p>
+            }
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <h5>Use with Caution</h5>
+            @if (Model.CautionIngredients.Any())
+            {
+                <ul>
+                    @foreach (var c in Model.CautionIngredients.Distinct())
+                    {
+                        <li>@c</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted">No specific caution ingredients detected.</p>
+            }
+        </div>
+
+        <div class="col-md-4 mb-3">
+            <h5>Potentially Irritating / To Avoid</h5>
+            @if (Model.AvoidIngredients.Any())
+            {
+                <ul>
+                    @foreach (var a in Model.AvoidIngredients.Distinct())
+                    {
+                        <li>@a</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted">No strong irritants detected by our rules.</p>
+            }
+        </div>
+    </div>
+
+    @if (Model.ComboWarnings.Any())
+    {
+        <div class="mt-3">
+            <h5>Combination Warnings</h5>
+            <ul>
+                @foreach (var w in Model.ComboWarnings.Distinct())
+                {
+                    <li>@w</li>
+                }
+            </ul>
+        </div>
+    }
+
+    <p class="text-muted mt-3">
+        This is not medical advice. Ingredient lists can be complex; for serious concerns, please consult a dermatologist.
+    </p>
+}

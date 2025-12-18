@@ -1,0 +1,158 @@
+﻿@model IEnumerable<ECommerce.Models.Product>
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<!-- HERO SECTION -->
+<div class="hero-section mb-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <span class="hero-badge">ForYou Skincare</span>
+
+                <h1 class="display-5 fw-bold mt-3">
+                    Designed for girls who want glowing, healthy skin – without the confusion.
+                </h1>
+
+                <p class="hero-subtitle mt-3">
+                    ForYou is your personal skincare studio: take a quick skin quiz, build your morning
+                    and night routines, and check ingredients before they touch your face.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2 mt-3">
+                    <a asp-controller="Skin" asp-action="Quiz"
+                       class="btn btn-light btn-lg px-4">
+                        Start Skin Quiz
+                    </a>
+                    <a asp-controller="Products" asp-action="Index"
+                       class="btn btn-outline-light btn-lg px-4">
+                        Shop ForYou Picks
+                    </a>
+                </div>
+
+                <div class="mt-4 small hero-footnote">
+                    <div>• Personalized routines for oily, dry, sensitive and combination skin.</div>
+                    <div>• Ingredient checker to spot irritants before they cause breakouts.</div>
+                    <div>• Tips from basic routines to smarter product layering.</div>
+                </div>
+            </div>
+
+            <div class="col-lg-6 mt-4 mt-lg-0">
+                <div class="hero-card shadow-lg">
+                    <h5 class="mb-3">How ForYou makes your skincare easier</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <strong>Understands your skin</strong> with a short, friendly quiz.
+                        </li>
+                        <li class="mb-2">
+                            <strong>Builds your routine</strong> step-by-step for morning and night.
+                        </li>
+                        <li class="mb-2">
+                            <strong>Explains ingredients</strong> so you know what you put on your face.
+                        </li>
+                        <li class="mb-2">
+                            <strong>Recommends products</strong> that match your skin type and main concern.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- HOW IT HELPS SECTION -->
+<div class="container mb-5">
+    <h2 class="section-title text-center mb-4">Your skincare, but simpler and smarter</h2>
+    <p class="text-center text-muted mb-4">
+        ForYou was created especially for girls and young women who want results without spending hours
+        researching skincare science. We keep the smart part in the background – you just enjoy the glow.
+    </p>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="feature-card h-100">
+                <h5>1. Know your skin</h5>
+                <p>
+                    Take the Skin Quiz once and we remember whether you’re oily, dry, sensitive
+                    or somewhere in between. Every tip and product suggestion adapts to your profile.
+                </p>
+                <a asp-controller="Skin" asp-action="Quiz" class="feature-link">Take the quiz →</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-card h-100">
+                <h5>2. Build your routine</h5>
+                <p>
+                    Morning and night routines that actually make sense: cleansers, serums, moisturizers
+                    and SPF in the right order, saved under “My Routine” so you never forget a step.
+                </p>
+                <a asp-controller="Routine" asp-action="Index" class="feature-link">See your routine →</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="feature-card h-100">
+                <h5>3. Check ingredients</h5>
+                <p>
+                    Paste any ingredient list and let ForYou highlight hydrating heroes, possible irritants
+                    and tricky combinations – especially helpful for sensitive or acne‑prone skin.
+                </p>
+                <a asp-controller="Ingredients" asp-action="Checker" class="feature-link">Try ingredient checker →</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURED PRODUCTS SECTION -->
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="section-title mb-0">Featured ForYou picks</h2>
+        <a asp-controller="Products" asp-action="Index"
+           class="btn btn-outline-secondary btn-sm">
+            View all products
+        </a>
+    </div>
+
+    <div class="row">
+        @foreach (var p in Model)
+        {
+            <div class="col-md-3 mb-4">
+                <div class="card product-card h-100">
+                    <div class="product-image-wrapper">
+                        <img class="card-img-top"
+                             src="@(string.IsNullOrEmpty(p.ImageUrl) ? "https://via.placeholder.com/400x500?text=ForYou+Skincare" : p.ImageUrl)"
+                             alt="@p.Name" />
+                        @if (p.IsPopular)
+                        {
+                            <span class="product-tag">Popular</span>
+                        }
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-subtitle text-muted mb-1">@p.Category?.Name</h6>
+                        <h5 class="card-title">@p.Name</h5>
+                        <p class="card-text text-muted mb-2">@p.Price.ToString("C")</p>
+
+                        @if (!string.IsNullOrEmpty(p.KeyIngredients))
+                        {
+                            <p class="small text-muted mb-3">
+                                Key ingredients: @p.KeyIngredients
+                            </p>
+                        }
+
+                        <div class="mt-auto">
+                            <a asp-controller="Products" asp-action="Details" asp-route-id="@p.Id"
+                               class="btn btn-sm btn-outline-secondary">Details</a>
+                            <form asp-controller="Cart" asp-action="Add" method="post" class="d-inline ms-1">
+                                <input type="hidden" name="productId" value="@p.Id" />
+                                <button type="submit" class="btn btn-sm btn-primary">Add to cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
